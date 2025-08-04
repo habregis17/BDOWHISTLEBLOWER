@@ -1,0 +1,9 @@
+<br />
+<b>Warning</b>:  Undefined variable $caseNumber in <b>C:\xampp\htdocs\Whistleblower\admin\Dashboard\Cases\export_excel.php</b> on line <b>32</b><br />
+<br />
+<b>Fatal error</b>:  Uncaught Error: Class &quot;ZipArchive&quot; not found in C:\xampp\htdocs\Whistleblower\admin\Dashboard\Cases\XLSXWriter.php:101
+Stack trace:
+#0 C:\xampp\htdocs\Whistleblower\admin\Dashboard\Cases\XLSXWriter.php(75): XLSXWriter-&gt;writeToFile('C:\\Users\\Habuwi...')
+#1 C:\xampp\htdocs\Whistleblower\admin\Dashboard\Cases\export_excel.php(39): XLSXWriter-&gt;writeToStdOut()
+#2 {main}
+  thrown in <b>C:\xampp\htdocs\Whistleblower\admin\Dashboard\Cases\XLSXWriter.php</b> on line <b>101</b><br />

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Case Report - <?= htmlspecialchars($case['casenumber']) ?></title>
+  <style>
+    body {
+      font-family: 'Trebuchet MS', sans-serif;
+      margin: 40px;
+      color: #333;
+    }
+
+    header, footer {
+      text-align: center;
+      padding: 10px 0;
+    }
+
+    header img {
+      height: 60px;
+    }
+
+    h1 {
+      font-size: 20px;
+      color: #ED1A3B;
+      margin-bottom: 5px;
+    }
+
+    h2 {
+      font-size: 16px;
+      color: #333;
+    }
+
+    .case-meta {
+      font-size: 12px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .section {
+      margin-top: 25px;
+    }
+
+    .section h3 {
+      background-color: #ED1A3B;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .field-group {
+      margin: 10px 0;
+    }
+
+    .field-group label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+
+    .field-group input,
+    .field-group textarea {
+      width: 100%;
+      padding: 6px;
+      font-size: 12px;
+      background-color: #f8f8f8;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      resize: none;
+    }
+
+    .attachments div {
+      font-size: 12px;
+      margin: 4px 0;
+    }
+
+    footer {
+      font-size: 10px;
+      margin-top: 40px;
+      border-top: 1px solid #ccc;
+      padding-top: 10px;
+      color: #666;
+    }
+
+    .columns {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .columns > div {
+      flex: 1;
+      min-width: 300px;
+    }
+
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="logo.png" alt="Logo"> <!-- Replace with your logo path -->
+  <h1>Whistleblower Case Management System</h1>
+  <h2>Case #: <?= htmlspecialchars($case['casenumber']) ?></h2>
+</header>
+
+<p class="case-meta">
+  <strong>Status:</strong> <?= htmlspecialchars($case['status']) ?> | 
+  <strong>Submitted:</strong> <?= htmlspecialchars($case['submitted_at']) ?> | 
+  <strong>Last Updated by:</strong> <?= htmlspecialchars($case['updated_by']) ?> on <?= htmlspecialchars($case['last_updated']) ?>
+</p>
+
+<div class="columns">
+  <div class="section">
+    <h3>Reporter Information</h3>
+    <div class="field-group">
+      <label>Concerned Client</label>
+      <input type="text" value="<?= htmlspecialchars($case['client_name']) ?>" disabled>
+    </div>
+    <div class="field-group">
+      <label>Affiliation</label>
+      <input type="text" value="<?= htmlspecialchars($case['affiliation']) ?>" disabled>
+    </div>
+    <div class="field-group">
+      <label>Anonymity</label>
+      <input type="text" value="<?= htmlspecialchars($case['identity_choice']) ?>" disabled>
+    </div>
+
+    <?php
+      $identity = strtolower($case['identity_choice']);
+      if ($identity === 'identifiable' || $identity === 'identifiable_to_bdo_only' || $identity === 'identified'):
+    ?>
+      <div class="field-group">
+        <label>Full Name</label>
+        <input type="text" value="<?= htmlspecialchars($case['full_name']) ?>" disabled>
+      </div>
+      <div class="field-group">
+        <label>Email</label>
+        <input type="text" value="<?= htmlspecialchars($case['email']) ?>" disabled>
+      </div>
+      <div class="field-group">
+        <label>Telephone</label>
+        <input type="text" value="<?= htmlspecialchars($case['phone']) ?>" disabled>
+      </div>
+    <?php endif; ?>
+  </div>
+
+  <div class="section">
+    <h3>Incident Details</h3>
+    <div class="field-group">
+      <label>When did the incident(s) take place?</label>
+      <textarea rows="3" disabled><?= htmlspecialchars($case['incident_when']) ?></textarea>
+    </div>
+    <div class="field-group">
+      <label>Where did the incident(s) take place?</label>
+      <textarea rows="3" disabled><?= htmlspecialchars($case['incident_where']) ?></textarea>
+    </div>
+    <div class="field-group">
+      <label>Which department/site does it concern?</label>
+      <textarea rows="3" disabled><?= htmlspecialchars($case['incident_division']) ?></textarea>
+    </div>
+    <div class="field-group">
+      <label>Description of the incident(s)</label>
+      <textarea rows="5" disabled><?= htmlspecialchars($case['incident_description']) ?></textarea>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Attachments</h3>
+  <div class="attachments">
+    <?php
+    $files = json_decode($case['files'], true);
+    if (is_array($files) && count($files) > 0):
+      foreach ($files as $file):
+        $filename = basename($file);
+        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+        switch ($ext) {
+          case 'pdf': $icon = '📄'; break;
+          case 'doc': case 'docx': $icon = '📝'; break;
+          case 'xls': case 'xlsx': $icon = '📊'; break;
+          case 'jpg': case 'jpeg': case 'png': $icon = '🖼️'; break;
+          case 'zip': case 'rar': $icon = '🗜️'; break;
+          default: $icon = '📁'; break;
+        }
+        echo "<div>{$icon} {$filename}</div>";
+      endforeach;
+    else:
+      echo "<div><em>No files attached.</em></div>";
+    endif;
+    ?>
+  </div>
+</div>
+
+<footer>
+  &copy; <?= date("Y") ?> Whistleblower Solution - Regis Tech. All Rights Reserved.
+</footer>
+
+</body>
+</html>
